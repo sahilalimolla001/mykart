@@ -1,0 +1,100 @@
+<link rel="icon" href="data:,">
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+<style>
+body{margin:0;font-family:Arial;background:#f1f3f6}
+.navbar{background:#2874f0;color:white;padding:18px 30px;display:flex;gap:25px;align-items:center}
+.logo{font-size:30px;font-weight:bold;cursor:pointer}
+.section{background:white;margin:25px;padding:25px;border-radius:8px}
+button{padding:10px 15px;margin:5px;background:#ff9f00;color:white;border:none;cursor:pointer}
+li{background:#f7f7f7;margin:8px;padding:12px;list-style:none}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo" onclick="location.href='/'">MyKart Admin</div>
+</div>
+
+<div class="section">
+    <h2>Users</h2>
+    <button onclick="loadUsers()">Load Users</button>
+    <ul id="users"></ul>
+</div>
+
+<div class="section">
+    <h2>Products Approval</h2>
+    <button onclick="loadProducts()">Load Products</button>
+    <ul id="products"></ul>
+</div>
+
+<script>
+const API = "http://127.0.0.1:5000";
+
+async function loadUsers(){
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API + "/admin/users", {
+        headers:{"Authorization":"Bearer " + token}
+    });
+
+    const data = await res.json();
+    users.innerHTML = "";
+
+    if(data.msg){ alert(data.msg); return; }
+
+    data.forEach(u=>{
+        users.innerHTML += `<li>ID: ${u.id} | ${u.username} | ${u.role}</li>`;
+    });
+}
+
+async function loadProducts(){
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API + "/admin/products", {
+        headers:{"Authorization":"Bearer " + token}
+    });
+
+    const data = await res.json();
+    products.innerHTML = "";
+
+    if(data.msg){ alert(data.msg); return; }
+
+    data.forEach(p=>{
+        products.innerHTML += `
+            <li>
+                ${p.name} | ₹${p.price} | Stock: ${p.stock} | Status: ${p.status}
+                <button onclick="approve(${p.id})">Approve</button>
+                <button onclick="reject(${p.id})">Reject</button>
+            </li>
+        `;
+    });
+}
+
+async function approve(id){
+    const token = localStorage.getItem("token");
+
+    await fetch(API + "/admin/approve-product/" + id, {
+        method:"PUT",
+        headers:{"Authorization":"Bearer " + token}
+    });
+
+    loadProducts();
+}
+
+async function reject(id){
+    const token = localStorage.getItem("token");
+
+    await fetch(API + "/admin/reject-product/" + id, {
+        method:"PUT",
+        headers:{"Authorization":"Bearer " + token}
+    });
+
+    loadProducts();
+}
+</script>
+
+</body>
+</html>

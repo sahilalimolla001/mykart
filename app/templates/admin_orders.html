@@ -1,0 +1,93 @@
+<link rel="icon" href="data:,">
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Orders</title>
+<style>
+body{margin:0;font-family:Arial;background:#f1f3f6}
+.navbar{background:#2874f0;color:white;padding:18px 30px}
+.logo{font-size:30px;font-weight:bold;cursor:pointer}
+.section{background:white;margin:25px;padding:25px;border-radius:8px}
+.order{background:#fafafa;margin:12px 0;padding:15px;border-radius:6px}
+button{padding:10px 14px;margin:5px;border:none;color:white;cursor:pointer;border-radius:4px}
+.confirm{background:#2874f0}
+.ship{background:#6a1b9a}
+.deliver{background:#388e3c}
+.cancel{background:#d32f2f}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo" onclick="location.href='/'">Admin Orders</div>
+</div>
+
+<div class="section">
+    <h1>Manage Orders</h1>
+    <button class="confirm" onclick="loadOrders()">Load Orders</button>
+    <div id="ordersBox"></div>
+</div>
+
+<script>
+const API = "http://127.0.0.1:5000";
+
+async function loadOrders(){
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API + "/admin/orders", {
+        headers:{
+            "Authorization":"Bearer " + token
+        }
+    });
+
+    const data = await res.json();
+    ordersBox.innerHTML = "";
+
+    if(data.msg){
+        alert(data.msg);
+        return;
+    }
+
+    data.forEach(o=>{
+        ordersBox.innerHTML += `
+            <div class="order">
+                <h3>Order #${o.id}</h3>
+                <p>User ID: ${o.user_id}</p>
+                <p>Product ID: ${o.product_id}</p>
+                <p>Qty: ${o.quantity}</p>
+                <p>Total: ₹${o.total_price}</p>
+                <p>Status: <b>${o.status}</b></p>
+                <button onclick="updateStatus(${o.id}, 'out_for_delivery')" style="background:#ff9800">
+    Out for Delivery
+</button>
+                <button class="confirm" onclick="updateStatus(${o.id}, 'confirmed')">Confirm</button>
+                <button class="ship" onclick="updateStatus(${o.id}, 'shipped')">Shipped</button>
+                <button class="deliver" onclick="updateStatus(${o.id}, 'delivered')">Delivered</button>
+                <button class="cancel" onclick="updateStatus(${o.id}, 'cancelled')">Cancel</button>
+            </div>
+        `;
+    });
+}
+
+async function updateStatus(orderId, status){
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API + "/admin/update-order-status/" + orderId, {
+        method:"PUT",
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":"Bearer " + token
+        },
+        body:JSON.stringify({status:status})
+    });
+
+    const data = await res.json();
+    alert(JSON.stringify(data));
+    loadOrders();
+}
+
+loadOrders();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,300 @@
+<div class="navbar">
+    <div class="logo" onclick="location.href='/'">EVSPEARE</div>
+    <input placeholder="Search products">
+    <button onclick="location.href='/page/login'">Login</button>
+    <button onclick="location.href='/page/products'">Products</button>
+    <button onclick="location.href='/page/cart'">Cart</button>
+</div>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flipkart Style</title>
+    <style>
+        body{margin:0;font-family:Arial;background:#f5f5f5;color:#111}
+        .page{max-width:1180px;margin:auto;background:white;min-height:100vh;padding:0 12px}
+        .top{display:flex;align-items:center;justify-content:space-between;padding:8px 24px}
+        .brand{display:flex;gap:12px}
+        .logo{background:#ffe500;color:#064ecf;padding:13px 28px;border-radius:10px;font-weight:bold;font-style:italic}
+        .travel{background:#eee;padding:13px 28px;border-radius:10px;font-weight:bold}
+        .location{font-weight:bold}
+        .location span{color:#064ecf}
+        .nav{display:flex;align-items:center;gap:22px;padding:10px 24px;border-bottom:1px solid #ddd}
+        .search{flex:1;border:2px solid #1a73e8;border-radius:10px;padding:13px;font-size:16px}
+        .menu{display:flex;gap:20px;align-items:center}
+        .cats{display:flex;gap:28px;padding:12px 24px;border-bottom:1px solid #ddd;overflow:hidden}
+        .cat{text-align:center;font-size:14px;white-space:nowrap}
+        .cat .icon{font-size:24px}
+        .active{border-bottom:4px solid #1a73e8;padding-bottom:8px;font-weight:bold}
+        .banners{display:grid;grid-template-columns:1fr 1fr 200px;gap:32px;padding:16px 24px}
+        .banner{height:224px;border-radius:14px;padding:18px;background:#78cfff;position:relative;overflow:hidden}
+        .banner h2{margin-top:80px;font-size:22px}
+        .banner p{font-size:16px}
+        .pink{background:#fa004b;color:white}
+        .badge{background:#ffe500;color:#064ecf;padding:8px;border-radius:50%;font-weight:bold;width:70px;text-align:center}
+        .model{position:absolute;right:25px;bottom:0;font-size:110px}
+        .dots{text-align:center;color:#999;margin-top:-10px}
+        .products{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:14px 24px}
+        .card{background:#eee;border-radius:12px;height:230px;padding:12px;position:relative;overflow:hidden}
+        .ad{position:absolute;right:12px;top:12px;background:#bbb;color:white;padding:4px 7px;border-radius:4px;font-size:12px}
+        .card img{width:100%;height:150px;object-fit:contain;margin-top:25px}
+        .price{color:#388e3c;font-weight:bold}
+        .loginBox{display:none;position:fixed;top:85px;right:80px;background:white;padding:20px;box-shadow:0 0 20px #999;z-index:20}
+        button{cursor:pointer}
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <div class="top">
+        <div class="brand">
+            <div class="logo">f Flipkart</div>
+            <div class="travel">✈️ Travel</div>
+        </div>
+        <div class="location">📍 Location not set <span>Select delivery location ›</span></div>
+    </div>
+
+    <div class="nav">
+        <input class="search" id="searchText" placeholder="🔍  Search for Products, Brands and More">
+        <div class="menu">
+            <div onclick="toggleLogin()">👤 Login⌄</div>
+            <div>More⌄</div>
+            <div>🛒 Cart</div>
+        </div>
+    </div>
+
+    <div class="cats">
+        <div class="cat active"><div class="icon">🛍️</div>For You</div>
+        <div class="cat"><div class="icon">👕</div>Fashion</div>
+        <div class="cat"><div class="icon">📱</div>Mobiles</div>
+        <div class="cat"><div class="icon">💄</div>Beauty</div>
+        <div class="cat"><div class="icon">💻</div>Electronics</div>
+        <div class="cat"><div class="icon">🏠</div>Home</div>
+        <div class="cat"><div class="icon">📺</div>Appliances</div>
+        <div class="cat"><div class="icon">🧸</div>Toys</div>
+        <div class="cat"><div class="icon">🍯</div>Food & H...</div>
+        <div class="cat"><div class="icon">🏍️</div>2 Wheele...</div>
+        <div class="cat"><div class="icon">📚</div>Books & ...</div>
+    </div>
+
+    <div class="banners">
+        <div class="banner">
+            <div class="badge">BIG<br>BACHAT<br>DAYS</div>
+            <h2>Briefs, vests...<br>Under ₹99</h2>
+            <p>Shop fast, before stocks vanish!</p>
+            <div class="model">👕</div>
+        </div>
+
+        <div class="banner">
+            <div class="badge">BIG<br>BACHAT<br>DAYS</div>
+            <h2>Price Drop on Intel i7 PCs<br>From ₹41,990*</h2>
+            <p>Up to 16 GB/512 GB SSD</p>
+            <div class="model">💻</div>
+        </div>
+
+        <div class="banner pink">
+            <h2>boAt speakers<br>From ₹999</h2>
+            <p>Every party needs a monster</p>
+            <div class="model">🔊</div>
+        </div>
+    </div>
+
+    <div class="dots">● ○ ○ ○ ○ ○ ○</div>
+
+    <div class="products" id="product_list">
+        <div class="card"><span class="ad">AD</span><img src="https://via.placeholder.com/250x150?text=Shoes"><h3>Sports Shoes</h3><p class="price">₹999</p></div>
+        <div class="card"><span class="ad">AD</span><img src="https://via.placeholder.com/250x150?text=Beauty"><h3>Face Powder</h3><p class="price">₹299</p></div>
+        <div class="card"><span class="ad">AD</span><img src="https://via.placeholder.com/250x150?text=Speaker"><h3>Mivi Speaker</h3><p class="price">₹1499</p></div>
+        <div class="card"><span class="ad">AD</span><img src="https://via.placeholder.com/250x150?text=Mobile"><h3>Smart Phone</h3><p class="price">₹12999</p></div>
+    </div>
+
+</div>
+
+<div class="loginBox" id="loginBox">
+    <h3>Login</h3>
+    <input id="login_username" placeholder="Username"><br><br>
+    <input id="login_password" type="password" placeholder="Password"><br><br>
+    <button onclick="login()">Login</button>
+</div>
+
+<script>
+const API = "http://127.0.0.1:5000";
+async function addToCart(productId) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Login first");
+        return;
+    }
+
+    const res = await fetch(API + "/cart/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: 1
+        })
+    });
+
+    const data = await res.json();
+    alert(JSON.stringify(data));
+}
+
+function showMap(orderId){
+    const kolkata = [22.5726, 88.3639];
+
+    const map = L.map("map-" + orderId).setView(kolkata, 12);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19
+    }).addTo(map);
+
+    L.marker(kolkata).addTo(map)
+        .bindPopup("Delivery location")
+        .openPopup();
+}
+
+
+
+async function viewCart() {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API + "/cart", {
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    });
+
+    const data = await res.json();
+
+    let html = "<h2>My Cart</h2>";
+
+    data.items.forEach(item => {
+        html += `
+            <div>
+                ${item.name} | ₹${item.price} | Qty: ${item.quantity}
+                <button onclick="removeCartItem(${item.cart_id})">Remove</button>
+            </div>
+        `;
+    });
+
+    html += `<h3>Total: ₹${data.total}</h3>`;
+
+    document.getElementById("cartBox").innerHTML = html;
+}
+
+async function removeCartItem(cartId) {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API + "/cart/remove/" + cartId, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    });
+
+    const data = await res.json();
+    alert(JSON.stringify(data));
+    viewCart();
+}
+
+async function checkout() {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API + "/cart/checkout", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+            address: document.getElementById("address").value,
+            city: document.getElementById("city").value,
+            phone: document.getElementById("phone").value
+        })
+    });
+
+    const data = await res.json();
+    alert(JSON.stringify(data));
+    viewCart();
+}
+
+
+function toggleLogin(){
+    loginBox.style.display = loginBox.style.display === "block" ? "none" : "block";
+}
+
+async function login(){
+    const res = await fetch(API + "/login", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+            username:login_username.value,
+            password:login_password.value
+        })
+    });
+    const data = await res.json();
+    if(data.token){
+        localStorage.setItem("token", data.token);
+        alert("Login success");
+        loginBox.style.display="none";
+    } else {
+        alert(JSON.stringify(data));
+    }
+}
+</script>
+
+</body>
+</html>
+
+<div class="section">
+    <h2>Cart</h2>
+    <button onclick="viewCart()">View Cart</button>
+
+    <div id="cartBox"></div>
+
+    <h3>Checkout</h3>
+    <input id="address" placeholder="Address">
+    <input id="city" placeholder="City">
+    <input id="phone" placeholder="Phone">
+    <button onclick="checkout()">Checkout</button>
+</div>
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>EVSPEARE Home</title>
+<style>
+body{margin:0;font-family:Arial;background:#f1f3f6}
+.navbar{background:#2874f0;color:white;padding:12px;display:flex;gap:15px;align-items:center}
+.logo{font-size:24px;font-weight:bold;cursor:pointer}
+input{padding:10px;flex:1}
+button{padding:10px;background:#ff9f00;color:white;border:0;cursor:pointer}
+.hero{height:250px;background:linear-gradient(90deg,#2874f0,#6aa5ff);color:white;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:bold}
+.section{background:white;margin:15px;padding:20px}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo" onclick="location.href='/'">EVSPEARE</div>
+    <input placeholder="Search products">
+    <button onclick="location.href='/page/login'">Login</button>
+    <button onclick="location.href='/page/products'">Products</button>
+    <button onclick="location.href='/page/cart'">Cart</button>
+</div>
+
+<div class="hero">Big Saving Days Sale</div>
+
+<div class="section">
+    <h2>Welcome to EVSPEARE</h2>
+    <button onclick="location.href='/page/products'">Shop Now</button>
+</div>
+
+</body>
+</html>

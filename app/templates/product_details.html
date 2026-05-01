@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Product Details</title>
+<style>
+body{margin:0;font-family:Arial;background:#f1f3f6}
+.navbar{background:#2874f0;color:white;padding:18px 30px}
+.logo{font-size:30px;font-weight:bold;cursor:pointer}
+.container{background:white;margin:25px;padding:25px;border-radius:8px;display:flex;gap:30px}
+img{width:400px;height:400px;object-fit:contain;background:#fafafa}
+.details{flex:1}
+.price{font-size:32px;color:green;font-weight:bold}
+button{padding:14px 22px;margin:8px;border:none;color:white;cursor:pointer}
+.cart{background:#ff9f00}
+.buy{background:#2874f0}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <div class="logo" onclick="location.href='/'">MyKart</div>
+</div>
+
+<div class="container">
+
+    <div>
+        <img id="img">
+    </div>
+
+    <div class="details">
+        <h1 id="name"></h1>
+        <p id="desc"></p>
+        <p class="price" id="price"></p>
+        <p id="stock"></p>
+
+        <button class="cart" onclick="addToCart()">Add to Cart</button>
+        <button class="buy" onclick="buyNow()">Buy Now</button>
+    </div>
+
+</div>
+
+<script>
+const API = "http://127.0.0.1:5000";
+
+const path = window.location.pathname;
+const productId = path.split("/").pop();
+
+let currentProduct = null;
+
+async function loadProducts(){
+    const search = document.getElementById("searchText").value;
+    const minPrice = document.getElementById("minPrice").value;
+    const maxPrice = document.getElementById("maxPrice").value;
+    const sort = document.getElementById("sortPrice").value;
+
+    const url = `${API}/products?search=${search}&min_price=${minPrice}&max_price=${maxPrice}&sort=${sort}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    product_list.innerHTML = "";
+
+    if(data.length === 0){
+        product_list.innerHTML = "<h3>No products found</h3>";
+        return;
+    }
+
+    data.forEach(p=>{
+        const div = document.createElement("div");
+        div.className = "card";
+
+        div.innerHTML = `
+            <img onclick="openProduct(${p.id})" src="${p.image_url || 'https://via.placeholder.com/300x220?text=Product'}">
+            <h3 onclick="openProduct(${p.id})">${p.name}</h3>
+            <p>${p.description || 'No description available'}</p>
+            <p class="price">₹${p.price}</p>
+            <button class="cart-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+            <button class="buy-btn" onclick="buyNow(${p.id})">Buy Now</button>
+        `;
+
+        product_list.appendChild(div);
+    });
+}
+
+function openProduct(id){
+    location.href="/page/product/" + id;
+}
+
+async function addToCart(){
+
+    const token = localStorage.getItem("token");
+
+    if(!token){
+        alert("Login first");
+        location.href="/page/login";
+        return;
+    }
+
+    await fetch(API + "/cart/add", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":"Bearer " + token
+        },
+        body:JSON.stringify({
+            product_id:productId,
+            quantity:1
+        })
+    });
+
+    alert("Added to cart");
+}
+
+function buyNow(){
+    addToCart();
+    setTimeout(()=>{
+        location.href="/page/checkout";
+    },500);
+}
+
+loadProduct();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<link rel="icon" href="data:,">
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Cart</title>
+<style>
+body{margin:0;font-family:Arial;background:#f1f3f6}
+.navbar{background:#2874f0;color:white;padding:18px 30px;display:flex;gap:25px;align-items:center}
+.logo{font-size:30px;font-weight:bold;cursor:pointer}
+.nav-btn{background:#ff9f00;color:white;padding:12px 20px;border-radius:5px;cursor:pointer}
+.section{background:white;margin:25px;padding:25px;border-radius:8px}
+.cart-item{display:flex;justify-content:space-between;padding:15px;border-bottom:1px solid #ddd}
+button{border:none;padding:10px 18px;border-radius:5px;color:white;cursor:pointer}
+.remove{background:red}
+.checkout{background:green}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <div class="logo" onclick="location.href='/'">MyKart</div>
+    <div class="nav-btn" onclick="location.href='/page/products'">Products</div>
+</div>
+
+<div class="section">
+    <h1>My Cart</h1>
+
+    <div id="cartBox"></div>
+
+    <h2 id="total"></h2>
+
+    <button class="checkout" onclick="goCheckout()">Proceed to Checkout</button>
+</div>
+
+<script>
+const API = "http://127.0.0.1:5000";
+
+async function loadCart(){
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API + "/cart", {
+        headers:{
+            "Authorization":"Bearer " + token
+        }
+    });
+
+    const data = await res.json();
+
+    cartBox.innerHTML = "";
+    let total = 0;
+
+    data.items.forEach(item=>{
+        total += item.subtotal;
+
+        cartBox.innerHTML += `
+            <div class="cart-item">
+                <div>
+                    <h3>${item.name}</h3>
+                    ₹${item.price} × ${item.quantity}
+                </div>
+                <div>
+                    ₹${item.subtotal}
+                    <button class="remove" onclick="removeItem(${item.cart_id})">Remove</button>
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById("total").innerText = "Total: ₹" + total;
+}
+
+async function removeItem(id){
+    const token = localStorage.getItem("token");
+
+    await fetch(API + "/cart/remove/" + id, {
+        method:"DELETE",
+        headers:{
+            "Authorization":"Bearer " + token
+        }
+    });
+
+    loadCart();
+}
+
+function goCheckout(){
+    location.href="/page/checkout";
+}
+
+loadCart();
+</script>
+
+</body>
+</html>

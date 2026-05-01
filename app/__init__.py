@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, app
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
@@ -10,9 +10,21 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
 
+    database_url = os.environ.get("DATABASE_URL")
+
+    if database_url:
+        app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = URL.create(
+            "postgresql+psycopg2",
+            username="postgres",
+            password="sahil@123",   # अपना postgres password
+            host="localhost",
+            port=5432,
+            database="ecommerce_db"
+        )
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["JWT_SECRET_KEY"] = "super-secret-key"
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=10)
 
 
 
@@ -43,3 +55,4 @@ def create_app():
 
 
     return app
+
